@@ -1,0 +1,308 @@
+﻿@model IEnumerable<PlanDigitization_web.Models.Department>
+@{
+    ViewBag.Title = "Dept_settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <header class="page-header">
+        <h2> Department Details </h2>
+        <div class="right-wrapper pull-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="@Url.Action("Dashboard","Main")">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Settings</span></li>
+                <li><span>Department</span></li>
+            </ol>
+        </div>
+    </header>
+
+<!-- Add New Department-->
+<div class="row" id="divnew" style="display:none;">
+    <div class="col-md-2"></div>
+    <div class="col-md-12">
+        <form class="form" action="@Url.Action("Add_Dept","UserSettings")" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title">Add New Department</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Dept ID <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" name="Dept_id" class="form-control" title="Enter ID" placeholder="Dept ID" required />
+                        </div>
+                        <label class="col-sm-2 control-label"> Dept Name <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" name="Dept_name" class="form-control" title="Enter Name" placeholder="Dept Name" required />
+                        </div>
+                    </div>
+                </div>
+                <footer class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </form>
+    </div>
+</div>
+
+<!-- Department Details-->
+<div class="row" id="divdetails">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <section class="panel">
+            <header class="panel-heading">
+                @if (ViewContext.Controller.HasPermission("DepartmentSetting-Add"))
+                {
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" id="add"><i class="fa fa-plus" aria-hidden="true"> Add New</i></button>
+                    </div>
+                }
+                <h2 class="panel-title">List of Department : </h2>
+            </header>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="panel-body">
+                        @if (ViewContext.Controller.HasPermission("DepartmentSetting-View"))
+                        {
+                            <table class="table table-bordered table-striped mb-none" id="datatable-default">
+                                <thead>
+                                    <tr>
+                                        <th class="centercls"> S.No </th>
+                                        <th style="display:none;"></th>
+                                        <th> Dept ID </th>
+                                        <th> Dept Name </th>
+                                        <th style="text-align:center;width:150px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int RowNo = 0;}
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>
+                                                @{RowNo++;}@RowNo
+                                            </td>
+                                            <td class="ID" style="display:none;">
+                                                <span>@Html.Encode(item.Unique_id)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.Dept_id)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.Dept_name)</span>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                @if (ViewContext.Controller.HasPermission("DepartmentSetting-Edit"))
+                                                {
+                                                    <button class="btn btn-primary" style="margin-top: 10px" id="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                                }
+                                                @if (ViewContext.Controller.HasPermission("DepartmentSetting-Delete"))
+                                                {
+                                                    <button class="btn btn-danger" style="margin-top: 10px" id="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                                    }
+                                </tbody>
+                            </table>
+                                                    }
+                                                    else
+                                                    {
+                                                        <h2>View permission is denied</h2>
+                                                    }
+                        </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!--Edit Department Details-->
+<div class="row" id="divedit" style="display:none;">
+    <div class="col-md-2"></div>
+    <div class="col-md-12">
+        <form class="form" action="@Url.Action("Update_dept","UserSettings")" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title">Update Department</h2>
+                </header>
+                <div class="panel-body">
+                    <input type="hidden" id="eUnique_id" name="Unique_id" />
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Dept ID<span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="eDept_id" name="Dept_id" class="form-control" title="Enter ID" placeholder="Dept ID" required readonly />
+                        </div>
+                        <label class="col-sm-2 control-label"> Dept Name <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="eDept_name" name="Dept_name" class="form-control" title="Enter Name" placeholder="Dept Name" required />
+                        </div>
+                    </div>
+                </div>
+                <footer class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </form>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+@if (@TempData["message"] != null)
+{
+    <script type="text/javascript">
+    $(function () {
+        var msg = '@TempData["message"]';
+        if (msg == "Inserted") {
+            swal({
+                icon: "success",
+                title: "Details Added Successfully...!",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Updated") {
+            swal({
+                icon: "success",
+                title: "Details Updated Successfully...!",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Already Dept_id") {
+            swal({
+                icon: "error",
+                title: "Failed to Add.Department ID already exists",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Already Dept_name") {
+            swal({
+                icon: "error",
+                title: "Failed to Add.Department name already exists",
+                button: true,
+                timer: 4500
+            })
+        }
+        else {
+            swal({
+                icon: "error",
+                title: "Failed to Add",
+                button: true,
+                timer: 4500
+            })
+        }
+    });
+    </script>
+}
+
+<script type="text/javascript">
+    $("#add").click(function () {
+        $("#divnew").show();
+        $("#divdetails").hide();
+        $("#divedit").hide();
+    });
+
+    $(".cancel").click(function () {
+        $("#divnew").hide();
+        $("#divdetails").show();
+        $("#divedit").hide();
+    });
+
+</script>
+
+<script type="text/javascript">
+    var URL = '@System.Configuration.ConfigurationManager.AppSettings["url"]';
+
+    $("body").on("click", "#edit", function () {
+        var row = $(this).closest("tr");
+        var ID = row.find(".ID span").html();
+
+        var myData = {
+            "QueryType": "Edit_Dept",
+            "Parameter": ID
+        };
+
+        $("#divedit").show();
+        $("#divnew").hide();
+        $("#divdetails").hide();
+
+        $.ajax({
+            type: "POST",
+            url: URL + 'api/UserSettings/User_settings_details',
+            data: myData,
+            dataType: "json",
+            beforeSend: function () {
+                $('.loading').show();
+            },
+            complete: function () {
+                $('.loading').hide();
+            },
+            success: function (response) {
+                $('#eDept_id').val(response.data.Table[0].Dept_id);
+                $('#eDept_name').val(response.data.Table[0].Dept_name);
+                $('#eUnique_id').val(response.data.Table[0].Unique_id);
+            }
+            , error: function (response) {
+
+            }
+        });
+    });
+
+    $("body").on("click", "#delete", function () {
+        if (confirm("Do you want to Delete this?")) {
+            var row = $(this).closest("tr");
+            var ID = row.find(".ID span").html();
+
+            var myData = {
+                "QueryType": "Delete_Dept",
+                "Parameter": ID
+            };
+
+            $.ajax({
+                type: "POST",
+                url: URL + 'api/UserSettings/delete_User_settings_details',
+                data: myData,
+                dataType: "json",
+                beforeSend: function () {
+                    $('.loading').show();
+                },
+                complete: function () {
+                    $('.loading').hide();
+                },
+                success: function (response) {
+                    swal({
+                        icon: "success",
+                        title: "Details Deleted Successfully...!",
+                        showConfirmButton: false,
+                        timer: 4500
+                    })
+                    window.location = '@Url.Action("Dept_settings", "UserSettings")';
+                }
+            });
+        }
+    });
+</script>
+

@@ -1,0 +1,3 @@
+------Warn(2020-10-13 13:25:03.5417)TCLHSRPEDLT0476------
+                       Exception Type: |                       Exception Message: |                       Stack Trace: |                       Additional Info:Login Failed for user
+

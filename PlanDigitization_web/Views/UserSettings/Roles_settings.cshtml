@@ -1,0 +1,892 @@
+﻿@model IEnumerable<PlanDigitization_web.Models.Roles>
+@{
+    ViewBag.Title = "Roles_settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <header class="page-header">
+        <h2> Role & Permission Details </h2>
+        <div class="right-wrapper pull-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="@Url.Action("Dashboard","Main")">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Settings</span></li>
+                <li><span>Roles</span></li>
+            </ol>
+        </div>
+    </header>
+<!-- Add New Plant-->
+<div class="row" id="divnew" style="display:none;">
+    <div class="col-md-12">
+        <section class="panel form-wizard" id="w1">
+            <header class="panel-heading">
+                <h2 class="panel-title">Role & Permission</h2>
+            </header>
+            <div class="panel-body panel-body-nopadding">
+                <div class="wizard-tabs">
+                    <ul class="wizard-steps">
+                        <li class="active">
+                            <a href="#w1-account" data-toggle="tab" class="text-center">
+                                Role
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#w1-profile" data-toggle="tab" class="text-center">
+                                Permission
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                @if (ViewContext.Controller.HasPermission("PermissionSetting-View"))
+                {
+                    <form class="form-horizontal">
+                        <div class="tab-content">
+                            <div id="w1-account" class="tab-pane active">
+                                <div class="form-group">
+                                    <input type="hidden" name="RoleID" id="RoleID" />
+                                    <input type="hidden" id="UniqueId" />
+                                    <label class="col-sm-2 control-label"> Role Name <span class="required">*</span></label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="Role" class="form-control" title="Enter Role" placeholder="Role Name" required />
+                                    </div>
+                                    <label class="col-sm-2 control-label"> Role Description <span class="required">*</span></label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="Description" class="form-control" title="Enter Description" placeholder="Description" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="w1-profile" class="tab-pane">
+                                <div class="panel-body">
+                                    
+                                    <table id="permission_details" class="table table-bordered table-striped mb-none" style="text-align:center;">
+
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:center;"> Select All<br /> <input type="checkbox" class="all" onclick="checkAll()" /></th>
+                                                <th style="text-align:center;"> Module </th>
+                                                <th style="text-align:center;"> View </th>
+                                                <th style="text-align:center;"> Edit </th>
+                                                <th style="text-align:center;"> Add </th>
+                                                <th style="text-align:center;"> Delete </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="details">
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="oeelive" onclick="chk_function('oeelive')" />
+                                                </td>
+                                                <td>
+                                                    OEE Live
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="OEELive" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="oeelive" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="operatorefflive" onclick="chk_function('operatorefflive')" />
+                                                </td>
+                                                <td>
+                                                    Operator Efficiency Live
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="OperatorEfficiencyLive" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="operatorefflive" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="firstpasslive" onclick="chk_function('firstpasslive')" />
+                                                </td>
+                                                <td>
+                                                    First Pass Yield Live
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="FirstPassLive" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="firstpasslive" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="toollifelive" onclick="chk_function('toollifelive')" />
+                                                </td>
+                                                <td>
+                                                    Tool Life Monitoring  Live
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="ToolLifeLive" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="toollifelive" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="machineavaillive" onclick="chk_function('machineavaillive')" />
+                                                </td>
+                                                <td>
+                                                    Machine Availability  Live
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="MachineAvailabilityLive" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="machineavaillive" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="andonlive" onclick="chk_function('andonlive')" />
+                                                </td>
+                                                <td>
+                                                    Andon Live
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="AndonLive" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="andonlive" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="hourlylive" onclick="chk_function('hourlylive')" />
+                                                </td>
+                                                <td>
+                                                    Hourly Tracker Live
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="HourlyLive" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="hourlylive" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="oeehistoric" onclick="chk_function('oeehistoric')" />
+                                                </td>
+                                                <td>
+                                                    OEE Historic
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="OEEHistoric" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="oeehistoric" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="operatoreffhistoric" onclick="chk_function('operatoreffhistoric')" />
+                                                </td>
+                                                <td>
+                                                    Operator Efficiency Historic
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="OperatorEfficiencyHistoric" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="operatoreffhistoric" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="firstpasshistoric" onclick="chk_function('firstpasshistoric')" />
+                                                </td>
+                                                <td>
+                                                    FirstPassYield Historic
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="FirstPassHistoric" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="firstpasshistoric" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="toollifehistoric" onclick="chk_function('toollifehistoric')" />
+                                                </td>
+                                                <td>
+                                                    Tool Life Monitoring Historic
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="ToolLifeHistoric" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="toollifehistoric" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="pareto" onclick="chk_function('pareto')" />
+                                                </td>
+                                                <td>
+                                                    Pareto Analysis Historic
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="ParetoAnalysisHistoric" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="pareto" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="machineavailhistoric" onclick="chk_function('machineavailhistoric')" />
+                                                </td>
+                                                <td>
+                                                    Machine Availability Historic
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="MachineAvailabilityHistoric" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="machineavailhistoric" /></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            @*<tr>
+                    <td>
+                        <input type="checkbox" onclick="chk_function('oeelive')" />
+                    </td>
+                    <td>
+                        Customer Setting
+                        <input type="hidden" name="Module_name" id="Module_name" value="CustomerSetting" />
+                    </td>
+                    <td><input type="checkbox" value="1" name="View_form" id="View_form" /></td>
+                    <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" /></td>
+                    <td><input type="checkbox" value="1" name="Add_form" id="Add_form" /></td>
+                    <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" /></td>
+                </tr>*@
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="plant" onclick="chk_function('plant')" />
+                                                </td>
+                                                <td>
+                                                    Plant Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="PlantSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="plant" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="plant" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="plant" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="plant" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="dept" onclick="chk_function('dept')" />
+                                                </td>
+                                                <td>
+                                                    Department Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="DepartmentSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="dept" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="dept" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="dept" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="dept" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="function" onclick="chk_function('function')" />
+                                                </td>
+                                                <td>
+                                                    Function Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="FunctionSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="function" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="function" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="function" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="function" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="assets" onclick="chk_function('assets')" />
+                                                </td>
+                                                <td>
+                                                    Assets Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="AssetSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="assets" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="assets" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="assets" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="assets" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="operation" onclick="chk_function('operation')" />
+                                                </td>
+                                                <td>
+                                                    Operation Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="OperationSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="operation" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="operation" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="operation" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="operation" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="product" onclick="chk_function('product')" />
+                                                </td>
+                                                <td>
+                                                    Product Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="ProductSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="product" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="product" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="product" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="product" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="holiday" onclick="chk_function('holiday')" />
+                                                </td>
+                                                <td>
+                                                    Holiday Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="HolidaySetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="holiday" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="holiday" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="holiday" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="holiday" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="usetting" onclick="chk_function('usetting')" />
+                                                </td>
+                                                <td>
+                                                    Users Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="UserSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="usetting" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="usetting" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="usetting" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="usetting" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="roleset" onclick="chk_function('roleset')" />
+                                                </td>
+                                                <td>
+                                                    Role & Permission Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="PermissionSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="roleset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="roleset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="roleset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="roleset" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="skillset" onclick="chk_function('skillset')" />
+                                                </td>
+                                                <td>
+                                                    Skill Data Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="SkillSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="skillset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="skillset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="skillset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="skillset" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="operatorset" onclick="chk_function('operatorset')" />
+                                                </td>
+                                                <td>
+                                                    Operator Skill Matrix Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="OperatorSkillSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="operatorset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="operatorset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="operatorset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="operatorset" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="alarmset" onclick="chk_function('alarmset')" />
+                                                </td>
+                                                <td>
+                                                    Alarm Data Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="AlarmSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="alarmset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="alarmset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="alarmset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="alarmset" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="rejectionset" onclick="chk_function('rejectionset')" />
+                                                </td>
+                                                <td>
+                                                    Rejection Data Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="RejectionDataSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="rejectionset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="rejectionset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="rejectionset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="rejectionset" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="lossset" onclick="chk_function('lossset')" />
+                                                </td>
+                                                <td>
+                                                    Losses Data Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="LossesSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="lossset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="lossset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="lossset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="lossset" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="toollistset" onclick="chk_function('toollistset')" />
+                                                </td>
+                                                <td>
+                                                    ToolList Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="ToolListSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="toollistset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="toollistset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="toollistset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="toollistset" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="operatormachine" onclick="chk_function('operatormachine')" />
+                                                </td>
+                                                <td>
+                                                    Operator Machine Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="OperatorSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="operatormachine" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="operatormachine" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="operatormachine" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="operatormachine" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="shiftset" onclick="chk_function('shiftset')" />
+                                                </td>
+                                                <td>
+                                                    Shift Setting
+                                                    <input type="hidden" name="Module_name" id="Module_name" value="ShiftSetting" />
+                                                </td>
+                                                <td><input type="checkbox" value="1" name="View_form" id="View_form" class="shiftset" /></td>
+                                                <td><input type="checkbox" value="1" name="Edit_form" id="Edit_form" class="shiftset" /></td>
+                                                <td><input type="checkbox" value="1" name="Add_form" id="Add_form" class="shiftset" /></td>
+                                                <td><input type="checkbox" value="1" name="Delete_form" id="Delete_form" class="shiftset" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <footer class="panel-footer">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                                            <button type="button" class="btn btn-primary submit">Submit</button>
+                                            <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                                        </div>
+                                    </div>
+                                </footer>
+                            </div>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <h2>View permission is denied</h2>
+                }
+                </div>
+        </section>
+    </div>
+</div>
+
+<!-- Roles Details-->
+<div class="row" id="divdetails">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <section class="panel">
+            <header class="panel-heading">
+                @if (ViewContext.Controller.HasPermission("PermissionSetting-Add"))
+                {
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" id="add"><i class="fa fa-plus" aria-hidden="true"> Add New</i></button>
+                    </div>
+                }
+                <h2 class="panel-title">List of Roles : </h2>
+            </header>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="panel-body">
+                        @if (ViewContext.Controller.HasPermission("PermissionSetting-View"))
+                        {
+                            <table class="table table-bordered table-striped mb-none" id="datatable-default">
+                                <thead>
+                                    <tr>
+                                        <th class="centercls"> S.No </th>
+                                        <th style="display:none;"></th>
+                                        <th> Role Name </th>
+                                        <th style="text-align:center;width:150px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int RowNo = 0;}
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>
+                                                @{RowNo++;}@RowNo
+                                            </td>
+                                            <td class="RoleID" style="display:none;">
+                                                <span>@Html.Encode(item.RoleID)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.RoleName)</span>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                @if (ViewContext.Controller.HasPermission("PermissionSetting-Edit"))
+                                                {
+                                                    <button class="btn btn-primary" style="margin-top: 10px" id="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                                }
+                                                @if (ViewContext.Controller.HasPermission("PermissionSetting-Delete"))
+                                                {
+                                                    <button class="btn btn-danger" style="margin-top: 10px" id="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                                    }
+                                </tbody>
+                            </table>
+                                                    }
+                                                    else
+                                                    {
+                                                        <h2>View permission is denied</h2>
+                                                    }
+                        </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+
+<script type="text/javascript">
+    $("#add").click(function () {
+        $("#permission_details TBODY TR").each(function () {
+            var row = $(this);
+            row.find("#Add_form").prop("checked", false);
+            row.find("#View_form").prop("checked", false);
+            row.find("#Edit_form").prop("checked", false);
+            row.find("#Delete_form").prop("checked", false);
+        });
+
+        $("#divnew").show();
+        $("#divdetails").hide();
+    });
+
+    $(".cancel").click(function () {
+        $("#divnew").hide();
+        $("#divdetails").show();
+    });
+
+</script>
+@if (@TempData["message"] != null)
+{
+    <script type="text/javascript">
+    $(function () {
+        var msg = '@TempData["message"]';
+        if (msg == "Inserted") {
+            swal({
+                icon: "success",
+                title: "Details Added Successfully...!",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Updated") {
+            swal({
+                icon: "success",
+                title: "Details Updated Successfully...!",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Already RoleID") {
+            swal({
+                icon: "error",
+                title: "Failed to Add.Role ID already exists",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Already RoleName") {
+            swal({
+                icon: "error",
+                title: "Failed to Add.Role Name already exists",
+                button: true,
+                timer: 4500
+            })
+        }
+        else {
+            swal({
+                icon: "error",
+                title: "Failed to Add",
+                button: true,
+                timer: 4500
+            })
+        }
+    });
+    </script>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".submit").click(function (event) {
+            var permission = new Array();
+            var role = new Array();
+            var roles = {};
+            roles.RoleName = $('#Role').val();
+            roles.RoleDescription = $('#Description').val();
+            if (roles.RoleName == "" && roles.RoleDescription == "") {
+                swal({
+                    icon: "error",
+                    title: "Please Enter RoleName and RoleDescription...!",
+                    button: true,
+                    timer: 4500
+                })
+                return;
+            }
+            else if (roles.RoleName == "") {
+                swal({
+                    icon: "error",
+                    title: "Please Enter RoleName...!",
+                    button: true,
+                    timer: 4500
+                })
+                return;
+            }
+            else if (roles.RoleDescription == "") {
+                swal({
+                    icon: "error",
+                    title: "Please Enter RoleDescription...!",
+                    button: true,
+                    timer: 4500
+                })
+                return;
+            }
+            if ($('.submit').text() == "Update") {
+                roles.QueryType = "Update";
+            }
+            else {
+                roles.QueryType = "Insert";
+            }
+            roles.RoleID = $('#RoleID').val();
+            role.push(roles);
+            $("#permission_details TBODY TR").each(function () {
+                var row = $(this);
+                var permissions = {};
+                permissions.Module_name = row.find("#Module_name").val();
+                permissions.RoleID = $('#RoleID').val();
+                if (row.find("#Add_form").is(":checked")) {
+                    permissions.Add_form = '1';
+                }
+                else {
+                    permissions.Add_form = '0';
+                }
+
+                if (row.find("#View_form").is(":checked")) {
+                    permissions.View_form = '1';
+                }
+                else {
+                    permissions.View_form = '0';
+                }
+
+                if (row.find("#Edit_form").is(":checked")) {
+                    permissions.Edit_form = '1';
+                }
+                else {
+                    permissions.Edit_form = '0';
+                }
+
+                if (row.find("#Delete_form").is(":checked")) {
+                    permissions.Delete_form = '1';
+                }
+                else {
+                    permissions.Delete_form = '0';
+                }
+                if ($('.submit').text() == "Update") {
+                    permissions.QueryType = "Update";
+                }
+                else {
+                    permissions.QueryType = "Insert";
+                }
+                permission.push(permissions);
+            });
+            $.ajax({
+                type: "POST",
+                url: "/UserSettings/Add_Permission",
+                data: '{permissions: ' + JSON.stringify(permission) + ',role: ' + JSON.stringify(role) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function () {
+                    $('.loading').show();
+                },
+                complete: function () {
+                    $('.loading').hide();
+                },
+                success: function (response) {
+                    //if ($('.submit').text() == "Update") {
+                    //    swal({
+                    //        icon: "success",
+                    //        title: "Details Updated Successfully...!",
+                    //        button: true,
+                    //        timer: 4500
+                    //    })
+                    //}
+                    //else if ($('.submit').text() == "Submit") {
+                    //    swal({
+                    //        icon: "success",
+                    //        title: "Details Added Successfully...!",
+                    //        button: true,
+                    //        timer: 4500
+                    //    })
+                    //}
+                    $('.submit').text('Submit');
+                    window.location = '@Url.Action("Roles_settings", "UserSettings")';
+                }
+            });
+
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    var URL = '@System.Configuration.ConfigurationManager.AppSettings["url"]';
+    $("body").on("click", "#edit", function () {
+        var row = $(this).closest("tr");
+        var RoleID = row.find(".RoleID span").html();
+
+        var myData = {
+            "QueryType": "Edit_role",
+            "Parameter": RoleID,
+            "Parameter1": '@Session["CompanyCode"]'
+        };
+        $("#divnew").show();
+        $("#divdetails").hide();
+        $('.submit').text('Update');
+        $.ajax({
+            type: "POST",
+            url: URL + 'api/UserSettings/User_settings_details',
+            data: myData,
+            dataType: "json",
+            beforeSend: function () {
+                $('.loading').show();
+            },
+            complete: function () {
+                $('.loading').hide();
+            },
+            success: function (response)
+            {
+                $('#Role').val(response.data.Table[0].RoleName);
+                $('#Description').val(response.data.Table[0].RoleDescription);
+                $('#RoleID').val(response.data.Table[0].RoleID);
+                $('#UniqueId').val(response.data.Table[0].Unique_id);
+                for (var i = 0; i < response.data.Table1.length; i++) {
+                    $("#permission_details TBODY TR").each(function () {
+                        var row = $(this);
+                        var permissions = {};
+                        var Module_name = row.find("#Module_name").val();
+                        permissions.Role_id = $('#Role_id').val();
+                        if (Module_name == response.data.Table1[i].Module_name) {
+                            if (response.data.Table1[i].Add_form == "1") {
+                                row.find("#Add_form").prop("checked", true);
+                            }
+                            else {
+                                row.find("#Add_form").prop("checked", false);
+                            }
+                            if (response.data.Table1[i].View_form == "1") {
+                                row.find("#View_form").prop("checked", true);
+                            }
+                            else {
+                                row.find("#View_form").prop("checked", false);
+                            }
+                            if (response.data.Table1[i].Edit_form == "1") {
+                                row.find("#Edit_form").prop("checked", true);
+                            }
+                            else {
+                                row.find("#Edit_form").prop("checked", false);
+                            }
+                            if (response.data.Table1[i].Delete_form == "1") {
+                                row.find("#Delete_form").prop("checked", true);
+                            }
+                            else {
+                                row.find("#Delete_form").prop("checked", false);
+                            }
+                        }
+                    });
+                }
+            }
+            , error: function (response) {
+
+            }
+        });
+    });
+
+    $("body").on("click", "#delete", function () {
+        if (confirm("Do you want to Delete this Role?")) {
+            var row = $(this).closest("tr");
+            var RoleID = row.find(".RoleID span").html();
+            var myData = {
+                "QueryType": "Delete_role",
+                "Parameter": RoleID
+            };
+
+            $.ajax({
+                type: "POST",
+                url: URL + 'api/UserSettings/delete_User_settings_details',
+                data: myData,
+                dataType: "json",
+                beforeSend: function () {
+                    $('.loading').show();
+                },
+                complete: function () {
+                    $('.loading').hide();
+                },
+                success: function (response) {
+                    swal({
+                        icon: "success",
+                        title: "Roles Details Deleted Successfully...!",
+                        showConfirmButton: false,
+                        timer: 4500
+                    })
+                   window.location = '@Url.Action("Roles_settings", "UserSettings")';
+                }
+            });
+        }
+    });
+</script>
+<script>
+    function chk_function(val) {
+        var isChecked = $('.' + val + '').prop("checked");
+        $('#permission_details tr:has(td)').find('input[class="' + val + '"]').prop('checked', isChecked);
+        }
+    function checkAll()
+    {
+         var checkboxes = document.getElementsByTagName('input'), val = null;    
+         for (var i = 0; i < checkboxes.length; i++)
+         {
+             if (checkboxes[i].type == 'checkbox')
+             {
+                 if (val === null) val = checkboxes[i].checked;
+                 checkboxes[i].checked = val;
+             }
+         }
+     }
+</script>
+

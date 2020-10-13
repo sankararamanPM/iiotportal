@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Settings_err";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<header class="page-header">
+    <h2> Settings page error</h2>
+</header>
+<h2>Request Failed</h2>
+<p>Unable to process the request for settings pages</p>
+<script src="~/assets/datepicker_normal/jquery-1.7.2.min.js"></script>
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+<script type="text/javascript">
+    $(function () {
+         var msg = '@TempData["notice"]';
+        var CompanyCode = '@Session["CompanyCode"]';
+        var PlantCode = '@Session["PlantCode"]';
+        if (CompanyCode == "" && PlantCode == "")
+        {
+            swal({
+                icon: "error",
+                title: "Please Select Customer and Plant...!",
+                button: true,
+                timer: 4500
+            })
+            return;
+        }
+        else if (CompanyCode == "")
+        {
+            swal({
+                icon: "error",
+                title: "Please Select Customer...!",
+                button: true,
+                timer: 4500
+            })
+            return;
+        }
+        else if (PlantCode == "")
+        {
+            swal({
+                icon: "error",
+                title: "Please Select Plant...!",
+                button: true,
+                timer: 4500
+                })
+            return;
+        }
+        else if (msg == "Select png or jpg or jpeg")
+            {
+            swal({
+                icon: "error",
+                title: "Customer details failed to add due to unspecified file type.\n Please upload only images.",
+                button: true,
+                timer: 4500
+                })
+            return;
+        }
+    });
+</script>
+
+

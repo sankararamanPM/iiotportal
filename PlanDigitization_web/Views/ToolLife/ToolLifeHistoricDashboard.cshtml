@@ -1,0 +1,418 @@
+﻿@{
+    ViewBag.Title = "ToolLifeHistoricDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.css">
+<header class="page-header">
+    <h2>Tool Life Monitoring Report</h2>
+    <div class="right-wrapper pull-right">
+        <ol class="breadcrumbs">
+            <li>
+                <a href="@Url.Action("Dashboard","Main")">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li><span>Historic Data & Analytics</span></li>
+            <li><span>Tool Life Monitoring</span></li>
+            <li><span>Tool Life Historic</span></li>
+        </ol>
+    </div>
+</header>
+@if (ViewContext.Controller.HasPermission("ToolLifeHistoric-View"))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="btn-group">
+                <label class="control-label" style="float:right; font-weight:bold;"> Select Line </label>
+            </div>
+            <div class="btn-group">
+                <select id="linecode" class="form-control" name="linecode" title="*"></select>
+            </div>&nbsp;&nbsp;
+            <div class="btn-group">
+                <label class="control-label" style="float:right; font-weight:bold;"> Select SubSystem </label>
+            </div>
+            <div class="btn-group">
+                <select id="subsystem" class="form-control" name="subsystem" title="*"></select>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tabs tabs-danger">
+                <ul class="nav nav-tabs">
+                    <li class="active" id="custom">
+                        <a href="#custom" data-toggle="tab">Custom</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="custom" class="tab-pane active">
+                        <section class="panel">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Date range</label>
+                                <div class="col-md-6">
+                                    <div class="input-daterange input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input type="text" class="form-control datepic" readonly style="text-align:left;" id="start" name="start">
+                                        <span class="input-group-addon">to</span>
+                                        <input type="text" class="form-control datepic" readonly style="text-align:left;" id="end" name="end">
+
+                                    </div>
+
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="mb-xs mt-xs mr-xs btn btn-primary" onclick="Viewdetails()">View</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="mb-xs mt-xs mr-xs btn btn-danger" onclick="Clear();">Reset</button>
+                                </div>
+                            </div>
+                            <header class="panel-heading">
+                                <div class="panel-actions">
+                                    <a href="#" class="fa fa-caret-down"></a>
+                                </div>
+                                <h2 class="panel-title">Historic View : <span class="line_name"></span> Assembly Line</h2>
+                            </header>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-condensed mb-none" id="datatable-custom">
+                                        <thead>
+                                            <tr>
+                                                <th>S.No</th>
+                                                <th>Line Name</th>
+                                                <th>Subsystem</th>
+                                                <th>Element</th>
+                                                <th>Make</th>
+                                                <th>Part Number</th>
+                                                <th>Classification</th>
+                                                <th>Conversion Parameter</th>
+                                                <th>Current Life Cycles</th>
+                                                <th>Rated Life Cycles</th>
+                                                <th>UOM</th>
+                                                <th class="hidden-phone">%Usage</th>
+                                                <th class="hidden-phone">Last PM</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="custom_details"></tbody>
+                                        <span class="custom_error" style="color:red;font-size:13px;font-weight:bold;"></span>
+                                    </table>
+                                </div>
+                                <div class="btn-group" style="float:right;">
+                                    <button type="button" class="mb-xs mt-xs mr-xs btn btn-primary" onclick="exportTableToExcel('datatable-custom', 'members-data1')">Download</button>
+                                </div>
+                            </div>
+                        </section>
+                        @*<section class="panel">
+                                <header class="panel-heading">
+                                    <div class="panel-actions">
+                                        <a href="#" class="fa fa-caret-down"></a>
+                                    </div>
+                                    <h2 class="panel-title">Preventive Maintanence record: <span class="line_name"></span> Assembly Line</h2>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-condensed mb-none" id="custom_preventive">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Line Name</th>
+                                                    <th>Subsystem</th>
+                                                    <th>Element</th>
+                                                    <th>Make</th>
+                                                    <th>Part Number</th>
+                                                    <th>Classification</th>
+                                                    <th>Last Maintanence date</th>
+                                                    <th>Is replaced?</th>
+                                                    <th>No of replacements</th>
+                                                    <th>Remarks</th>
+                                                    <th>Edit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="custom_preventive"></tbody>
+                                            <span class="custom_pre_error" style="color:red;font-size:13px;font-weight:bold;"></span>
+                                        </table>
+                                    </div>
+                                    <div class="btn-group" style="float:right;">
+                                        <button type="button" class="mb-xs mt-xs mr-xs btn btn-primary" onclick="exportTableToExcel('custom_preventive', 'members-data')">Download</button>
+                                    </div>
+                                </div>
+                            </section>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <h2 class="panel-title">View Permission is denied</h2>
+    </div>
+}
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+<script src="~/assets/datepicker_normal/jquery-1.7.2.min.js"></script>
+<script src="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.min.js"></script>
+<script src="~/assets/javascripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+    var dateToday = new Date();
+    var yrRange = (dateToday.getFullYear() - 10) + ":" + (dateToday.getFullYear());
+    $(".datepic").datepicker({
+        numberOfMonths: 1,
+        maxDate: '0',
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: yrRange,
+    });
+    var URL = '@System.Configuration.ConfigurationManager.AppSettings["url"]';
+
+    function Clear() {
+        $('#linecode').val('');
+        $('#subsystem').val('');
+        $('#start').val('');
+        $('#end').val('');
+    }
+
+    function Viewdetails() {
+        var active_tab = $('ul .active').attr("id");
+        var linecode = $('#linecode').val();
+        var subsystem = $('#subsystem').val();
+        var start = $('#start').val();
+        var end = $('#end').val();
+
+        $('.line_name').text(linecode);
+        $(".custom_error").text('');
+        $(".custom_pre_error").text('');
+
+
+        if (linecode == '') {
+            swal({
+                icon: "error",
+                title: "Please Provide Line details",
+                button: false,
+                timer: 4500
+            })
+        }
+        else if (subsystem == '') {
+                swal({
+                    icon: "error",
+                    title: "Please Provide Machine details",
+                    button: false,
+                    timer: 4500
+                })
+        }
+        else if (start == '') {
+                swal({
+                    icon: "error",
+                    title: "Please Provide start date",
+                    button: false,
+                    timer: 4500
+                })
+        }
+        else if (end == '') {
+                swal({
+                    icon: "error",
+                    title: "Please Provide End date",
+                    button: false,
+                    timer: 4500
+                })
+        }
+        else {
+            if (start>end) {
+                swal({
+                    icon: "error",
+                    title: "Please Provide Dates correctly...",
+                    button: false,
+                    timer: 4500
+                })
+            }
+            var myData = {
+                "Flag": "custom",
+                "linename": linecode,
+                "subsystem": subsystem,
+                "fromdate": start,
+                "todate": end,
+                "CompanyCode": '@Session["CompanyCode"]',
+                "PlantCode": '@Session["PlantCode"]'
+            };
+            //alert(myData.fromdate);
+            $.ajax({
+                type: "POST",
+                url: URL + 'api/Toollife/Gettoolhistorical',
+                data: myData,
+                dataType: "json",
+                beforeSend: function () {
+                    $('.loading').show();
+                },
+                complete: function () {
+                    $('.loading').hide();
+                },
+                success: function (response) {
+                    //alert(response.data.length)
+                    var rowsCnt = document.getElementById("datatable-custom").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+                    if (rowsCnt > 0) {
+                        for (var i = 0; i < rowsCnt; i++) {
+                            document.getElementById("datatable-custom").deleteRow(1);
+                        }
+                    }
+                    if (response.data.length != 0) {
+                        var j = 1;
+                        for (var i = 0; i < response.data.length; i++) {
+                            var newRow = $("<tr>");
+                            var cols = '';
+                            cols += "<td> " + j + "</td> ";
+                            cols += "<td> " + response.data[i].linename + "</td> ";
+                            cols += "<td> " + response.data[i].subsystem + "</td> ";
+                            cols += "<td> " + response.data[i].element + "</td> ";
+                            cols += "<td> " + response.data[i].make + "</td> ";
+                            cols += "<td> " + response.data[i].partnumber + "</td> ";
+                            cols += "<td> " + response.data[i].classification + "</td> ";
+                            cols += "<td> " + response.data[i].conversionparameter + "</td> ";
+                            cols += "<td> " + response.data[i].currentlifecycle + "</td> ";
+                            cols += "<td> " + response.data[i].ratedlife + "</td> ";
+                            cols += "<td> " + response.data[i].uom + "</td> ";
+                            cols += "<td> " + response.data[i].usage + "</td> ";
+                            cols += "<td> " + response.data[i].lastmain + "</td> ";
+                            cols += "</tr>";
+                            newRow.append(cols);
+                            $(".custom_details").append(newRow);
+                            j++;
+                        }
+                    }
+                    else {
+                        $(".custom_error").text(response.msg);
+                    }
+                    //if ($.fn.DataTable.isDataTable('#dataTable')) {
+                    //    $('#datatable-custom').DataTable().destroy();
+                    //}
+                    //$('#datatable-custom').DataTable({
+                    //    "ordering": true
+                    //});
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        var CompanyCode = '@Session["CompanyCode"]';
+        var PlantCode = '@Session["PlantCode"]';
+        if (CompanyCode == "" && PlantCode == "") {
+            swal({
+                icon: "error",
+                title: "Please Select Customer and Plant...!",
+                button: true,
+                timer: 4500
+            })
+            return;
+        }
+        else
+            if (CompanyCode == "") {
+                swal({
+                    icon: "error",
+                    title: "Please Select Customer...!",
+                    button: true,
+                    timer: 4500
+                })
+                return;
+            }
+            else
+                if (PlantCode == "") {
+                    swal({
+                        icon: "error",
+                        title: "Please Select Plant...!",
+                        button: true,
+                        timer: 4500
+                    })
+                    return;
+                }
+                else {
+                    var URL = '@System.Configuration.ConfigurationManager.AppSettings["url"]';
+                    var myData = {
+                        "Flag": "LineCode",
+                        "CompanyCode": '@Session["CompanyCode"]',
+                        "PlantCode": '@Session["PlantCode"]',
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: URL + 'api/Toollife/GetSettingdatas',
+                        data: myData,
+                        dataType: "json",
+                        success: function (response) {
+                            var s = '<option value="">Select Line</option>';
+                            for (var i = 0; i < response.data.length; i++) {
+                                s += '<option value="' + response.data[i].Code + '">' + response.data[i].Name + '</option>';
+                            }
+                            $("#linecode").html(s);
+                        },
+                        error: function (response) {
+
+                        }
+                    });
+
+                    var myData = {
+                        "Flag": "Subsystem",
+                        "CompanyCode": '@Session["CompanyCode"]',
+                        "PlantCode": '@Session["PlantCode"]',
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: URL + 'api/Toollife/GetSettingdatas',
+                        data: myData,
+                        dataType: "json",
+                        success: function (response) {
+                            var s = '<option value="">Select Subsystem</option>';
+                            for (var i = 0; i < response.data.length; i++) {
+                                s += '<option value="' + response.data[i].Code + '">' + response.data[i].Name + '</option>';
+                            }
+                            $("#subsystem").html(s);
+                        },
+                        error: function (response) {
+
+                        }
+                    });
+                }
+
+    });
+</script>
+<script>
+    function exportTableToExcel(tableID, filename = '') {
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name
+        filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+</script>
+
+

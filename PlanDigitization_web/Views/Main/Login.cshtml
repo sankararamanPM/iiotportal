@@ -1,0 +1,146 @@
+﻿@model PlanDigitization_web.Models.Loginmodel
+@using CaptchaMvc.HtmlHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>:: Login ::</title>
+    @Styles.Render("~/assets/css")
+    @Scripts.Render("~/assets/firstscript")
+    <link rel="icon" href="~/Images/teal-sfs.png" type="image/x-icon">
+    <style type="text/css">
+        .loading {
+            font-family: Arial;
+            font-size: 10pt;
+            /*border: 5px solid #67CFF5;*/
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: fixed;
+            background-color: #0e0e0e4f;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" align="center">
+        <img src="~/assets/images/loading.gif" alt="" style="width:150px;padding-top:300px;" />
+    </div>
+    <header class="header">
+        <div class="logo-container">
+            <a class="logo">
+                <img src="~/assets/images/teallogo.png" style="height:35px;" alt="TEAL" />
+            </a>
+
+        </div>
+        <h3 style="margin-left:35%">PLANT DIGITIZATION SOFTWARE</h3>
+    </header>
+    <div style="background-color:#34495e;">
+        <section class="body-sign">
+            <div class="center-sign">
+                <a href="/" class="logo pull-left">
+                </a>
+                <div class="panel panel-sign">
+                    <div class="panel-title-sign mt-xl text-right">
+                        <h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i> Sign In</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form" action="@Url.Action("Checklogin","Main")" method="post" id="logintrial">
+                            <div class="form-group mb-lg">
+                                <label>Username</label>
+                                <div class="input-group input-group-icon">
+                                    <input name="UserName" type="text" title="Username" class="form-control input-lg" autocomplete="off" required />
+                                    <span class="input-group-addon">
+                                        <span class="icon icon-lg">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group mb-lg">
+                                <div class="clearfix">
+                                    <label class="pull-left">Password</label>
+                                </div>
+                                <div class="input-group input-group-icon">
+                                    <input name="Password" type="password" class="form-control input-lg" required />
+                                    <span class="input-group-addon">
+                                        <span class="icon icon-lg">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                @Html.Captcha(4)
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <button type="submit" class="btn btn-primary">Sign In</button>
+                                    @*<button type="button" class="btn btn-primary" onclick="return Check_login();">Sign In</button>*@
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <a href="@Url.Action("Forgot","Main")" style="text-decoration:none;" class="pull-right">Forgot Password?</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="~/assets/javascripts/swal.js"></script>
+    <script src="~/assets/javascripts/swal_alert.js"></script>
+    @if (@TempData["message"] != null)
+    {
+        <script type="text/javascript">
+            $(function () {
+                var msg = '@TempData["message"]';
+                if (msg == "Login Successfull...!") {
+                    swal({
+                        icon: "success",
+                        title: "@TempData["message"]",
+                        button: true,
+                        timer: 2500
+                    }).then(function (result) {
+                        window.location = '@Url.Action("Dashboard", "Main")';
+                    })
+                }
+                else {
+                    swal({
+                        icon: "error",
+                        title: "@TempData["message"]",
+                        button: true,
+                        timer: 2500
+                    })
+                }
+        });
+        </script>
+    }
+    <script>
+        var URL = '@System.Configuration.ConfigurationManager.AppSettings["url"]';
+        function Check_login() {
+            var R_url = '@Url.Action("Dashboard", "Main")';
+            var UserName = $('#User_name').val();
+            var Password = $('#Password').val();
+            if (UserName == "") {
+                $('#User_name').css("border-color", "#a94442");
+                $('#User_name').focus();
+                return false;
+            }
+            else {
+                $('#User_name').css("border-color", "#cccccc");
+            }
+            if (Password == "") {
+                $('#Password').css("border-color", "#a94442");
+                $('#Password').focus();
+                return false;
+            }
+            else {
+                $('#Password').css("border-color", "#cccccc");
+            }
+        }
+    </script>
+</body>
+</html>

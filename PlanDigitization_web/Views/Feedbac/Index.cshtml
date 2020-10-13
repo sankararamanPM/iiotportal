@@ -1,0 +1,88 @@
+﻿
+@model PlanDigitization_web.Models.MailModel
+@{
+    ViewBag.Title = "Feedbackpage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <header class="page-header">
+        <h2>Feedback </h2>
+        <div class="right-wrapper pull-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="@Url.Action("Dashboard","Main")">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Feedback</span></li>
+            </ol>
+        </div>
+    </header>
+
+<p>
+    @using (@Html.BeginForm("Index", "Feedbac", FormMethod.Post, new { @id = "form1", @enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary()
+
+
+        <table class="table-condensed">
+            <tbody>
+                <tr>
+                    <td>User Name</td>
+                    <td id="username">@Session["UserName"]</td>
+                </tr>
+                <tr>
+                    <td>Feedback Topic:</td>
+                    <td>@Html.TextBoxFor(m => m.Subject, new { @class = "form-control" })</td>
+                </tr>
+                <tr>
+                    <td>Upload</td>
+                    <td><input name="fileUploader" type="file" class="btn btn-primary" /></td>
+                </tr>
+                <tr>
+                    <td>Comments:</td>
+                    <td>@Html.TextAreaFor(m => m.Body, new { @class = "form-control" })</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <input type="submit" class="btn btn-success" style="margin-left:25%;margin-right:25%" value="Send" />
+    }
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+@if (@TempData["message"] != null)
+{
+    <script type="text/javascript">
+    $(function () {
+        var msg = '@TempData["message"]';
+        if (msg == "Mail sent") {
+            swal({
+                icon: "success",
+                title: "Mail Sent Successfully...!",
+                button: true,
+                timer: 4500
+            }).then(function (result) {
+                    window.location = '@Url.Action("Index", "Feedbac")';
+             })
+            msg = "";
+        }
+        else {
+            swal({
+                icon: "error",
+                title: "Error sending mail",
+                button: true,
+                timer: 4500
+            }).then(function (result) {
+                    window.location = '@Url.Action("Index", "Feedbac")';
+             })
+             msg = "";
+        }
+
+    });
+    </script>
+}

@@ -1,0 +1,437 @@
+﻿@model IEnumerable<PlanDigitization_web.Models.assets>
+@{
+    ViewBag.Title = "Assets_settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <header class="page-header">
+        <h2> Assets Details </h2>
+        <div class="right-wrapper pull-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="@Url.Action("Dashboard","Main")">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Settings</span></li>
+                <li><span>Assets</span></li>
+            </ol>
+        </div>
+    </header>
+
+<!-- Add New Assets-->
+<div class="row" id="divnew" style="display:none;">
+    <div class="col-md-12">
+        <form class="form" action="@Url.Action("Insert_assetdetails","UserSettings")" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title">Add New Assets</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Asset ID <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="AssetID" name="AssetID" class="form-control" title="Asset ID" placeholder="Asset ID" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Asset Name <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" name="AssetName" id="AssetName" class="form-control" title="Asset Name" placeholder="Asset Name" required />
+                        </div>
+                        <label class="col-sm-2 control-label"> Asset Description <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" name="AssetDescription" id="AssetDescription" class="form-control" title="AssetDescription" placeholder="Asset Description" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Function Name <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control FunctionName" name="FunctionName" id="FunctionName" title="Select Function" required></select>
+                        </div>
+                        <label class="col-sm-2 control-label"> Shift ID <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control ShiftID" name="ShiftID" id="ShiftID" title="Select Shift" required></select>
+                        </div>
+                    </div>
+                </div>
+                <footer class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </form>
+    </div>
+</div>
+
+<!-- Asset Details-->
+<div class="row" id="divdetails">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                @if (ViewContext.Controller.HasPermission("AssetSetting-Add"))
+                {
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" id="add"><i class="fa fa-plus" aria-hidden="true"> Add New</i></button>
+                    </div>
+                }
+                <h2 class="panel-title">List of Assets : </h2>
+            </header>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="panel-body">
+                        @if (ViewContext.Controller.HasPermission("AssetSetting-View"))
+                        {
+                            <table class="table table-bordered table-striped mb-none" id="datatable-default" data-swf-path="assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
+                                <thead>
+                                    <tr>
+                                        <th class="centercls"> S.No </th>
+                                        <th style="display:none;"></th>
+                                        <th> Asset ID</th>
+                                        <th>Asset Name</th>
+                                        <th> Asset Description </th>
+                                        <th> Function Name </th>
+                                        <th>Shift</th>
+                                        <th style="text-align:center;width:150px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int RowNo = 0;}
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>
+                                                @{RowNo++;}@RowNo
+                                            </td>
+                                            <td class="AssetID" style="display:none;">
+                                                <span>@Html.Encode(item.Unique_id)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.AssetID)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.AssetName)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.AssetDescription)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.funname)</span>
+                                            </td>
+                                            <td>
+                                                <span>@Html.Encode(item.sname)</span>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                @if (ViewContext.Controller.HasPermission("AssetSetting-Edit"))
+                                                {
+                                                    <button class="btn btn-primary" style="margin-top: 10px" id="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                                }
+                                                @if (ViewContext.Controller.HasPermission("AssetSetting-Delete"))
+                                                {
+                                                    <button class="btn btn-danger" style="margin-top: 10px" id="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                                    }
+                                </tbody>
+                            </table>
+                                                    }
+                                                    else
+                                                    {
+                                                        <h2>View permission is denied</h2>
+                                                    }
+                        </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!--Edit Asset Details-->
+<div class="row" id="divedit" style="display:none;">
+    <div class="col-md-12">
+        <form class="form" action="@Url.Action("Update_assetdetails","UserSettings")" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title">Update Assets</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Asset ID <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="eAssetID" name="AssetID" class="form-control" title="Asset ID" placeholder="Asset ID" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="eUnique_id" name="Unique_id" />
+                        <label class="col-sm-2 control-label"> Asset Name <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" name="AssetName" id="eAssetName" class="form-control" title="AssetName" placeholder="Asset Name" required />
+                        </div>
+                        <label class="col-sm-2 control-label"> Asset Description <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" name="AssetDescription" id="eAssetDescription" class="form-control" title="Asset Description" placeholder="Asset Description" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Function Name <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control FunctionName" name="FunctionName" id="eFunctionName" title="Select Function" required></select>
+                        </div>
+                        <label class="col-sm-2 control-label"> Shift ID <span class="required">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control ShiftID" name="ShiftID" id="eShiftID" title="Select Shift" required></select>
+                        </div>
+                    </div>
+                </div>
+                <footer class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </form>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+@if (@TempData["message"] != null)
+{
+    <script type="text/javascript">
+    $(function () {
+        var msg = '@TempData["message"]';
+        if (msg == "Inserted") {
+            swal({
+                icon: "success",
+                title: "Details Added Successfully...!",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Updated") {
+            swal({
+                icon: "success",
+                title: "Details Updated Successfully...!",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Already AssetID") {
+            swal({
+                icon: "error",
+                title: "Failed to Add.Asset ID already exists",
+                button: true,
+                timer: 4500
+            })
+        }
+        else if (msg == "Already AssetName") {
+           swal({
+                icon: "error",
+                title: "Failed to Add.Asset Name already exists",
+                button: true,
+                timer: 4500
+           })
+        }
+        else {
+          swal({
+                icon: "error",
+                title: "Failed to Add",
+                button: true,
+                timer: 4500
+          })
+        }
+    });
+    </script>
+}
+<script type="text/javascript">
+    $("#add").click(function () {
+        $("#divnew").show();
+        $("#divdetails").hide();
+        $("#divedit").hide();
+    });
+
+    $(".cancel").click(function () {
+        $("#divnew").hide();
+        $("#divdetails").show();
+        $("#divedit").hide();
+    });
+
+</script>
+<script type="text/javascript">
+    $(function () {
+        var URL = '@System.Configuration.ConfigurationManager.AppSettings["url"]';
+        var myData = {
+            "QueryType": "Function",
+            "Parameter" : '@Session["PlantCode"]',
+            "Parameter1": '@Session["CompanyCode"]'
+        };
+        var myDatas = {
+            "QueryType": "ShiftSettings",
+            "Parameter" : '@Session["PlantCode"]',
+            "Parameter1": '@Session["CompanyCode"]'
+        };
+        $.ajax({
+            type: "POST",
+            data: myData,
+            url: URL + 'api/UserSettings/User_settings_details',
+            dataType: "json",
+            success: function (response) {
+                var s = '<option value="">Please Select</option>';
+                for (var i = 0; i < response.data.Table.length; i++) {
+                    s += '<option value="' + response.data.Table[i].FunctionID + '">' + response.data.Table[i].FunctionName + '</option>';
+                }
+                $(".FunctionName").html(s);
+            }
+        });
+        $.ajax({
+            type: "POST",
+            data: myDatas,
+            url: URL + 'api/UserSettings/User_settings_details',
+            dataType: "json",
+            success: function (response) {
+                var s = '<option value="">Please Select</option>';
+                for (var i = 0; i < response.data.Table.length; i++) {
+                    s += '<option value="' + response.data.Table[i].ID + '">' + response.data.Table[i].ShiftName + '</option>';
+                }
+                $(".ShiftID").html(s);
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    var URL = '@System.Configuration.ConfigurationManager.AppSettings["url"]';
+    $("body").on("click", "#edit", function () {
+        var row = $(this).closest("tr");
+        var ID = row.find(".AssetID span").html();
+
+        var myData = {
+            "QueryType": "Edit_Assets",
+            "Parameter": ID
+        };
+
+        $("#divedit").show();
+        $("#divnew").hide();
+        $("#divdetails").hide();
+
+        $.ajax({
+            type: "POST",
+            url: URL + 'api/UserSettings/User_settings_details',
+            data: myData,
+            dataType: "json",
+            beforeSend: function () {
+                $('.loading').show();
+            },
+            complete: function () {
+                $('.loading').hide();
+            },
+            success: function (response) {
+                $('#eAssetID').val(response.data.Table[0].AssetID);
+                $('#eAssetName').val(response.data.Table[0].AssetName);
+                $('#eAssetDescription').val(response.data.Table[0].AssetDescription);
+                $('#eUnique_id').val(response.data.Table[0].Unique_id);
+                var myData = {
+                    "QueryType": "Function",
+                    "Parameter" : '@Session["PlantCode"]',
+                    "Parameter1": '@Session["CompanyCode"]'
+                };
+                var myDatas = {
+                    "QueryType": "ShiftSettings",
+                    "Parameter" : '@Session["PlantCode"]',
+                    "Parameter1": '@Session["CompanyCode"]'
+                };
+                $.ajax({
+                    type: "POST",
+                    data: myData,
+                    url: URL + 'api/UserSettings/User_settings_details',
+                    dataType: "json",
+                    success: function (response1) {
+                        var s = '<option value="">Please Select</option>';
+                        for (var i = 0; i < response1.data.Table.length; i++) {
+                            if (response1.data.Table[i].FunctionID == response.data.Table[0].FunctionName) {
+                                s += '<option value="' + response1.data.Table[i].FunctionID + '" selected=selected>' + response1.data.Table[i].FunctionName + '</option>';
+                            }
+                            else {
+                                s += '<option value="' + response1.data.Table[i].FunctionID + '">' + response1.data.Table[i].FunctionName + '</option>';
+                            }
+                        }
+                        $(".FunctionName").html(s);
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    data: myDatas,
+                    url: URL + 'api/UserSettings/User_settings_details',
+                    dataType: "json",
+                    success: function (response2) {
+                        var s = '<option value="">Please Select</option>';
+                        for (var i = 0; i < response2.data.Table.length; i++) {
+                            if (response2.data.Table[i].ID == response.data.Table[0].ShiftID) {
+                                s += '<option value="' + response2.data.Table[i].ID + '" selected=selected>' + response2.data.Table[i].ShiftName + '</option>';
+                            }
+                            else {
+                                s += '<option value="' + response2.data.Table[i].ID + '">' + response2.data.Table[i].ShiftName + '</option>';
+                            }
+                        }
+
+
+                        $(".ShiftID").html(s);
+                    }
+                });
+
+
+            }
+            , error: function (response) {
+
+            }
+        });
+    });
+
+    $("body").on("click", "#delete", function () {
+        if (confirm("Do you want to Delete this Asset?")) {
+            var row = $(this).closest("tr");
+            var ID = row.find(".AssetID span").html();
+
+            var myData = {
+                "QueryType": "Delete_Assets",
+                "Parameter": ID
+            };
+
+            $.ajax({
+                type: "POST",
+                url: URL + 'api/UserSettings/delete_User_settings_details',
+                data: myData,
+                dataType: "json",
+                beforeSend: function () {
+                    $('.loading').show();
+                },
+                complete: function () {
+                    $('.loading').hide();
+                },
+                success: function (response) {
+                    swal({
+                        icon: "success",
+                        title: "Asset Details Deleted Successfully...!",
+                        button: true,
+                        timer: 4500
+                    })
+                   window.location = '@Url.Action("Assets_settings", "UserSettings")';
+                }
+            });
+        }
+    });
+</script>
+

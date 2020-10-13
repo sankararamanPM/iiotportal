@@ -1,0 +1,145 @@
+
+@{
+    ViewBag.Title = "AvailabilityLiveDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <header class="page-header">
+        <h2> Availability Live Dashboard </h2>
+        <div class="right-wrapper pull-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="@Url.Action("Dashboard","Main")">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li><span>KPI Dashboards</span></li>
+                <li><span>Availability</span></li>
+            </ol>
+        </div>
+    </header>
+@if (ViewContext.Controller.HasPermission("MachineAvailabilityLive-View"))
+{
+    <div class="row">
+        <button type="button" style="float:right" class="btn btn-default">Last update time: <span id="updated_time"></span></button>
+
+    </div>
+    <div class="row livedata">
+
+    </div>
+}
+else
+{
+    <div class="row">
+        <h2 class="panel-title">View Permission is denied</h2>
+    </div>
+}
+<script src="~/assets/javascripts/swal.js"></script>
+<script type="text/javascript">
+    var URL = '@System.Configuration.ConfigurationManager.AppSettings["signalr_url"]';
+    //$.getScript(URL + 'Scripts/jquery.signalR-2.4.1.min.js', function () {
+        //$.getScript(URL + 'signalr/hubs/', function () {
+        //    // Declare a proxy to reference the hub.
+        //    $.connection.hub.url = URL + 'signalr';
+        //    var notifications = $.connection.PlantDigitizationhub;
+        //    //debugger;
+        //    // Create a function that the hub can call to broadcast messages.
+        //    notifications.client.updateDatas = function () {
+        //        getavllivedata()
+        //    };
+        //    // Start the connection.
+        //    $.connection.hub.start().done(function () {
+        //        getavllivedata();
+        //    }).fail(function (e) {
+        //        console.log(e);
+        //    });
+        //});
+
+        function getavllivedata() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('?');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            var myData = {
+                "CompanyCode": '@Session["CompanyCode"]',
+                "PlantCode": '@Session["PlantCode"]',
+                "Line_Code": vars[0],
+            };
+
+            $.ajax({
+                type: 'POST',
+                data: myData,
+                url: URL + 'api/Availability/GetAvllivedata',
+                dataType: 'json'
+            }).success(function (response) {
+                if (response.data.length != 0) {
+                    //alert("inside")
+                    $(".livedata").html('');
+                    var j = 1;
+                    var cols = '';
+                    var sc = '';
+                    for (var i = 0; i < response.data.length; i++)
+                    {
+                        var dt = response.data[i].DownTime;
+                        var avl = response.data[i].Avail;
+                        cols += "<div class='col-md-4 col-xl-12'>";
+                        cols += "<section class='panel'>";
+                        cols += "<header class='panel-heading bg-primary'> ";
+                        if (response.data[i].Machine_Status == 0) {
+                            sc = 'red';
+                        }
+                        else {
+                            sc = 'green';
+                        }
+                        cols += "<i class='fa fa-circle' style='color:"+sc+";font-size:15px;'></i>";
+                        cols += "<span class='title' style='font-size: 120%'> " + response.data[i].Machine_Code + "</span>";
+                        cols += "</header>";
+                        cols += "<div class='panel-body'> ";
+                        cols += "<div class='widget-summary'> ";
+                        cols += "<div class='widget-summary-col'>";
+                        cols += "<div class='summary'>";
+                        cols += "<div class='info'>";
+                        cols += "<strong style='float:left'>Availability</strong><strong style='padding-left:25%'>:</strong><strong style='float:right;'>" + response.data[i].Avail + "%</strong>";
+                        cols += " <br />";
+                        cols += "<strong style='float:left'>Downtime            </strong><strong style='padding-left:27%'>:</strong><strong style='float:right;'>" + response.data[i].DownTime + "mins</strong>";
+                        cols += "<br />";
+                        cols += "<strong style='float:left'>Production Loss</strong><strong style='padding-left:13.5%'>:</strong><strong style='float:right;'>" + response.data[i].LossTime + "mins</strong>";
+                        cols += "<br />";
+                        if (dt == 0 && avl < 100) {
+                            cols += "<strong style='color:red'> The data is missing. </strong>";
+                        }
+                        else {
+                            cols += "<strong>&nbsp </strong>";
+                        }
+                        cols += "</div>";
+                        cols += "</div>";
+                        cols += "</div>";
+                        cols += "</div>";
+                        cols += "</div>";
+                        cols += "</div>";
+                        cols += "</section>";
+                        cols += "</div>";
+
+                        j++;
+                    }
+                    $('#updated_time').text(new Date().toLocaleString());
+                    $(".livedata").html(cols);
+                }
+                else
+                {
+                    $(".livedata").empty();
+                    $(".livedata").html('No Data Available');
+                }
+            }).error(function (response) {
+
+            });
+            setTimeout(getavllivedata, 10000);
+        }
+    //});
+$(document).ready(function () {
+        getavllivedata();
+});
+</script>
+
